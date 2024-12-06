@@ -27,7 +27,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Protected Routes
+// Protected Routes not used
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/refresh', [AuthController::class, 'ref aresh']);
     // Users
@@ -39,23 +39,24 @@ Route::group(['middleware' => ['auth:api']], function () {
         Route::delete('delete/{user_id}', 'remove');
     });
 });
+// ----------------------------------------------------------------------- //
+
 
 // Public Routes
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
-
-// Users
+// Users routes
 Route::prefix('users')->controller(UserController::class)->group(function () {
     Route::get('getAllUsers', 'index');
     Route::get('singleUser/{id}', 'showSingleUser');
     Route::post('create', 'create');
-    Route::post('update', 'update');
+    Route::post('update/{id}', 'updateUser');
     Route::delete('delete/{id}', 'delete');
 });
 
 
-// Products
+// Products routes
 Route::prefix('product')->controller(ProductsController::class)->group(function () {
     Route::post('create', 'create');
     Route::get('show', 'index');
@@ -64,8 +65,7 @@ Route::prefix('product')->controller(ProductsController::class)->group(function 
 });
 
 
-
-// Protected Routes
+// Protected Routes logout
 Route::group(['middleware' => ['auth:api']], function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 });

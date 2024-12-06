@@ -15,8 +15,6 @@ class AuthController extends Controller
 {
     use HttpResponses;
 
-
-
     public function update(StoreUserRequest $request)
     {
         $request->validated($request->all());

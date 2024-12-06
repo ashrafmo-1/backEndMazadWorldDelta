@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
+
+
 class UserController extends Controller
 {
     public function __construct(){
@@ -63,14 +65,23 @@ class UserController extends Controller
      */
     public function updateUser(Request $request)
     {
-        $request->validated($request->all());
-        $user = User::where('id', $request->id)->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => $request->password
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $request->id,
+            'password' => 'nullable|string|min:8',
         ]);
+
+        $user = User::where('id', $request->id)->first();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+        }
+        $user->save();
+
         return response()->json([
-            'message' => 'updated successflly'
+            'message' => 'updated successfully',
+            'user' => $user
         ]);
     }
 
