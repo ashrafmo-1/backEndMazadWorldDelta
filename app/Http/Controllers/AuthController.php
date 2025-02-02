@@ -7,40 +7,38 @@ use App\Http\Requests\StoreUserRequest;
 use App\Models\User;
 use App\Traits\HttpResponses;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     use HttpResponses;
 
-    public function update(StoreUserRequest $request)
-    {
-        $request->validated($request->all());
-        $user = User::where('id', $request->id)->update([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
-        ]);
-        return $this->sucess([
-            'user' => $user,
-        ]);
-    }
-
-    public function remove(Request $request)
-    {
-        DB::table('users')->where('id', '=', $request->user_id)->delete();
-    }
-
     public function login(LoginRequest $request)
     {
-        $request->validated($request->all());
-        $token = Auth::attempt($request->only(['email', 'password']));
+
         $user = User::where('email', $request->email)->first();
-        return $this->sucess([
+        if (!$user) {
+            return response()->json([
+                'status' => 'Error Has Occurred',
+                'message' => 422,
+                'data' => 'User not found'
+            ], 422);
+        }
+
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'status' => 'Error Has Occurred',
+                'message' => 422,
+                'data' => 'Invalid password'
+            ], 422);
+        }
+
+        return response()->json([
             'user' => $user,
-            'token' => $user->createToken('Api Token of' . $user->name)->plainTextToken
+            'token' => $user->createToken('Api Token of ' . $user->name)->plainTextToken
         ]);
     }
 
@@ -51,21 +49,18 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => $request->password
         ]);
-        $token = Auth::attempt([
-            'email' => $user->email,
-            'password' => $request->password,
-        ]);
+        $token = $user->createToken('Api Token of ' . $user->name)->plainTextToken;
         return $this->sucess([
             'user' => $user,
             'token' => $token
         ]);
     }
-    
+
     public function logout()
     {
-        Auth::logout()->currentAccessToken()->delte;
+        request()->user()->currentAccessToken()->delete();
         return $this->success([
             'message' => 'you have been logged out'
         ]);
