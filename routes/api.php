@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\HeroSectionController;
 use App\Http\Controllers\AuctionDetailsController;
+use App\Http\Controllers\LatestNewsController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -45,7 +46,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // });
 
 Route::post('/login', [AuthController::class, 'login']);
-// Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'register']);
 
 Route::prefix('v1/users')->controller(UserController::class)->group(function () {
     Route::get('getAllUsers', 'index');
@@ -62,6 +63,15 @@ Route::prefix('v1/customers')->controller(CustomerController::class)->group(call
     Route::delete('delete/{id}', 'delete');
     Route::post('update/{id}', 'update');
 });
+
+Route::prefix('v1/LatestNews')->controller(LatestNewsController::class)->group(callback: function () {
+    Route::get('', 'index');
+    Route::get('show/{id}', 'show');
+    Route::post('create', 'store');
+    Route::delete('delete/{id}', 'kill');
+    Route::post('update/{id}', 'update');
+});
+
 
 Route::prefix('v1/hero-section')->controller(HeroSectionController::class)->group(function () {
     Route::post('create', 'create');
