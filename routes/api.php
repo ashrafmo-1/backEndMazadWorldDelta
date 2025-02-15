@@ -26,26 +26,6 @@ use App\Http\Controllers\ProductsController;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
-// Route::group(['middleware' => ['auth:api']], function () {
-//     Route::post('/refresh', [AuthController::class, 'ref aresh']);
-//     // Users
-//     Route::prefix('user')->controller(AuthController::class)->group(function () {
-//         Route::get('show', 'getAll');
-//         Route::get('showbyid/{id}', 'getbyId');
-//         Route::post('update/{id}', 'updateUser');
-//         Route::post('create', 'register');
-//         Route::delete('delete/{user_id}', 'remove');
-//     });
-// });
-
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
 
