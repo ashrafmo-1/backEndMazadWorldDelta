@@ -9,6 +9,7 @@ use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\HeroSectionController;
 use App\Http\Controllers\AuctionDetailsController;
 use App\Http\Controllers\LatestNewsController;
+use App\Http\Controllers\FeaturedSellerController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -72,6 +73,13 @@ Route::prefix('v1/LatestNews')->controller(LatestNewsController::class)->group(c
     Route::post('update/{id}', 'update');
 });
 
+Route::prefix('v1/featured-sellers')->controller(FeaturedSellerController::class)->group(callback: function () {
+    Route::get('', 'index');
+    Route::post('create', 'create');
+    Route::get('show/{id}', 'show');
+    Route::post('update/{id}', 'update');
+    Route::delete('delete/{id}', 'kill');
+});
 
 Route::prefix('v1/hero-section')->controller(HeroSectionController::class)->group(function () {
     Route::post('create', 'create');
