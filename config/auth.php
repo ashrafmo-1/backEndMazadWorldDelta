@@ -44,6 +44,10 @@ return [
         'driver' => 'sanctum',
         'provider' => 'users',
     ],
+    'site' => [
+        'driver' => 'sanctum',
+        'provider' => 'clients',
+    ],
 ],
 
     /*
@@ -60,7 +64,6 @@ return [
     | be assigned to any extra authentication guards you have defined.
     |
     | Supported: "database", "eloquent"
-    |
     */
 
     'providers' => [
@@ -69,10 +72,10 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'clients' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Client::class,
+        ],
     ],
 
     /*

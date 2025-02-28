@@ -1,5 +1,5 @@
 <?php
-
+use App\Http\Controllers\SiteAuthController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\TaskController;
@@ -25,6 +25,15 @@ use App\Http\Controllers\ProductsController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+
+
+/* web site auction auth */
+Route::post('/site/login', [SiteAuthController::class, 'login']);
+Route::post('/site/register', [SiteAuthController::class, 'register']);
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('/site/logout', [SiteAuthController::class, 'logout']);
+});
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']);
