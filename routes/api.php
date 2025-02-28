@@ -26,7 +26,6 @@ use App\Http\Controllers\ProductsController;
 |
 */
 
-
 /* web site auction auth */
 Route::post('/site/login', [SiteAuthController::class, 'login']);
 Route::post('/site/register', [SiteAuthController::class, 'register']);
