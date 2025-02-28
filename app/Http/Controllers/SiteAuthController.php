@@ -10,6 +10,16 @@ use Illuminate\Support\Facades\Hash;
 class SiteAuthController extends Controller
 {
 
+    public function getAllClients()
+    {
+        $clients = Client::all();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $clients
+        ]);
+    }
+
     public function register(Request $request)
     {
         $request->validate([
@@ -33,7 +43,6 @@ class SiteAuthController extends Controller
             'user' => $client
         ], 201);
     }
-
 
     public function login(Request $request)
     {

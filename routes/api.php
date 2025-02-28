@@ -30,6 +30,7 @@ use App\Http\Controllers\ProductsController;
 /* web site auction auth */
 Route::post('/site/login', [SiteAuthController::class, 'login']);
 Route::post('/site/register', [SiteAuthController::class, 'register']);
+Route::middleware('auth:api')->get('/clients', [SiteAuthController::class, 'getAllClients']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/site/logout', [SiteAuthController::class, 'logout']);
