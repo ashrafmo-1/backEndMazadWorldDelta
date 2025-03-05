@@ -7,7 +7,11 @@ use Illuminate\Http\Request;
 
 class AuctionDetailsController extends Controller
 {
-    // Display a listing of all auctions
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except(['index', 'show']);
+    }
+
     public function index()
     {
         $auctions = Auction::all(); // Fetch all auctions

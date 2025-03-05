@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 
 class AuctionController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except(['index', 'showSingleAuction']);
+    }
+
     public function index()
     {
         $auctions = Auction::all();

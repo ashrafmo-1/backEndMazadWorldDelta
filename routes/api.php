@@ -10,7 +10,7 @@ use App\Http\Controllers\HeroSectionController;
 use App\Http\Controllers\AuctionDetailsController;
 use App\Http\Controllers\LatestNewsController;
 use App\Http\Controllers\FeaturedSellerController;
-
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductsController;
@@ -94,6 +94,15 @@ Route::prefix('v1/auctions')->controller(AuctionController::class)->group(functi
 
 Route::prefix('v1/auctions-details')->controller(AuctionDetailsController::class)->group(function () {
     Route::post('create', 'create');
+});
+
+Route::prefix('v1/products')->controller(ProductController::class)->group(function () {
+    Route::get('', 'index');
+    Route::get('{id}', 'show');
+
+    Route::post('create', 'store');
+    Route::post('update/{id}', 'update');
+    Route::delete('delete/{id}', 'destroy');
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
