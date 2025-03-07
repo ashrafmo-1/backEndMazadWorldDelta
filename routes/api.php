@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\AuctionController;
 use App\Http\Controllers\HeroSectionController;
 use App\Http\Controllers\AuctionDetailsController;
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\LatestNewsController;
 use App\Http\Controllers\FeaturedSellerController;
 use App\Http\Controllers\ProductController;
@@ -66,6 +67,14 @@ Route::prefix('v1/featured-sellers')->controller(FeaturedSellerController::class
     Route::get('', 'index');
     Route::post('create', 'create');
     Route::get('show/{id}', 'show');
+    Route::post('update/{id}', 'update');
+    Route::delete('delete/{id}', 'kill');
+});
+
+Route::prefix('v1/faqs')->controller(FaqController::class)->group(callback: function () {
+    Route::get('', 'index');
+    Route::post('create', 'store');
+    Route::get('showSingleFaq/{id}', 'showSingleFaq');
     Route::post('update/{id}', 'update');
     Route::delete('delete/{id}', 'kill');
 });
