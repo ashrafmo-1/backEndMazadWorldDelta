@@ -30,10 +30,12 @@ class AuctionController extends Controller
 
     public function create(Request $request)
     {
+        // php artisan storage:link
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'image' => 'required|string',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'images' => 'required|array|min:1',
             'starting_price' => 'required|numeric',
             'current_price' => 'nullable|numeric',
             'user_id' => 'required|integer|exists:users,id',

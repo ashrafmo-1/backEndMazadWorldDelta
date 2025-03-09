@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('_auction__detiales', function (Blueprint $table) {
+        Schema::create('auction_detiales', function (Blueprint $table) {
             $table->id();
             $table->string('auction_name')->nullable();
             $table->string('auction_description')->nullable();
@@ -26,11 +26,6 @@ return new class extends Migration
             $table->timestamps();
         });
     }
-
-    /**
-     *  'Cars', 'old car of 1996 made by frrai ', 'photo', '150,000$', '500,000$', '1', '01d:12h:03m', '00d:0h:00m'
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('_auction__detiales');
