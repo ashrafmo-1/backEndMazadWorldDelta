@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->text('images')->nullable();
             $table->decimal('starting_price', 10, 2)->nullable();
             $table->decimal('current_price', 10, 2)->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
             $table->timestamps();
