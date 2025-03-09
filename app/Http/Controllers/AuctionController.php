@@ -38,7 +38,7 @@ class AuctionController extends Controller
             'images' => 'required|array|min:1',
             'starting_price' => 'required|numeric',
             'current_price' => 'nullable|numeric',
-            'user_id' => 'required|integer|exists:users,id',
+            'category_id' => 'required|integer|exists:users,id',
             'start_time' => 'required|date|after_or_equal:now',
             'end_time' => 'required|date|after:start_time',
             'category_id' => 'nullable|integer|exists:categories,id',
