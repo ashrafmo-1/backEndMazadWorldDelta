@@ -13,7 +13,7 @@ class SiteAuthController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['getAllClients']);
+        $this->middleware('auth:api')->except(['register, login']);
     }
 
     public function getAllClients()
