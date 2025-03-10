@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Validator;
 
 class FeaturedSellerController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except(['index', 'show']);
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -28,7 +34,7 @@ class FeaturedSellerController extends Controller
             ], 500);
         }
     }
-    
+
     /**
      * Store a newly created resource in storage.
      */
@@ -107,7 +113,7 @@ class FeaturedSellerController extends Controller
             'countReviews' => 'nullable|integer',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Adjust as needed
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -115,24 +121,24 @@ class FeaturedSellerController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
-    
+
         try {
             $featuredSeller = FeaturedSeller::findOrFail($id);
-    
+
             $featuredSeller->name = $request->input('name', $featuredSeller->name);
             $featuredSeller->status = $request->input('status', $featuredSeller->status);
             $featuredSeller->startcount = $request->input('startcount', $featuredSeller->startcount);
             $featuredSeller->countReviews = $request->input('countReviews', $featuredSeller->countReviews);
-    
+
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
                 $imageName = time() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('images'), $imageName);
                 $featuredSeller->image = $imageName;
             }
-    
+
             $featuredSeller->save();
-    
+
             return response()->json([
                 'status' => true,
                 'message' => 'Featured Seller updated successfully',

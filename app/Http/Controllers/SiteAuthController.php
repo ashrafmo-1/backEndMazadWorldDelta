@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\View;
 class SiteAuthController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api')->except(['getAllClients']);
+    }
+
     public function getAllClients()
     {
         $clients = Client::all();
