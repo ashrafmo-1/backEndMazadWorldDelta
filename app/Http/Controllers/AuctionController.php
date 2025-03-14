@@ -12,9 +12,13 @@ class AuctionController extends Controller
         $this->middleware('auth:api')->except(['index', 'showSingleAuction']);
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $auctions = Auction::all();
+
+        $auctions = Auction::when($request->has('categoryId'), function ($query) use ($request) {
+                return $query->where('category_id', $request->categoryId);
+            })
+            ->get();
         return response()->json(['message' => 'Auctions found', 'auctions' => $auctions]);
     }
 

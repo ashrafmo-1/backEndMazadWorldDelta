@@ -10,6 +10,6 @@ class Auction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'description', 'image', 'starting_price', 'current_price', 'user_id', 'start_time', 'end_time'
+        'title', 'description', 'image', 'starting_price', 'current_price', 'category_id', 'start_time', 'end_time'
     ];
 }
