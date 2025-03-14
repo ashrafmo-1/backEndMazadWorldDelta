@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Auction;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class AuctionController extends Controller
 {
@@ -50,7 +52,28 @@ class AuctionController extends Controller
 
         $total_price = $validatedData['starting_price'] + ($validatedData['current_price'] ?? 0);
 
-        $auction = Auction::create($validatedData);
+        $imagePaths = "";
+
+        foreach ($request->images as $index => $image) {
+            $imageName = time(). '.'. $image->getClientOriginalExtension();
+
+            $image->storeAs('public/auction_images', $imageName);
+            $imagePaths.= 'auction_images/'.$imageName. ',';
+
+           
+        }
+
+        $imagePaths = rtrim($imagePaths, ',');
+
+        $auction = Auction::create([
+            'title' => $validatedData['title'],
+            'description' => $validatedData['description'],
+            'images' => $imagePaths,
+            'starting_price' => $validatedData['starting_price'],
+            'current_price' => $validatedData['current_price'],
+            'category_id' => $validatedData['category_id'],
+           'start_time' => $validatedData['start_time'],
+        ]);
 
         return response()->json([
             'message' => 'Auction created successfully',
@@ -62,7 +85,28 @@ class AuctionController extends Controller
     {
         $auction = Auction::find($id);
         if ($auction) {
-            $auction->update($request->all());
+            $auction->title = $request->title;
+            $auction->description = $request->description;
+            $auction->starting_price = $request->starting_price;
+            $auction->current_price = $request->current_price;
+            $auction->category_id = $request->category_id;
+            $auction->start_time = $request->start_time;
+            $auction->save();
+
+            if($request->file('images')){
+                $imagePaths = "";
+                foreach ($request->images as $index => $image) {
+                    $imageName = time(). '.'. $image->getClientOriginalExtension();
+
+                    $image->storeAs('public/auction_images', $imageName);
+                    $imagePaths.= 'auction_images/'.$imageName. ',';
+                }
+
+                $imagePaths = rtrim($imagePaths, ',');
+                $auction->images = $imagePaths;
+            }
+            $auction->save();
+
             return response()->json($auction);
         } else {
             return response()->json(['error' => 'Auction not found'], 404);
@@ -73,6 +117,12 @@ class AuctionController extends Controller
     {
         $auction = Auction::find($id);
         if ($auction) {
+            if ($auction->images){
+                $imagePaths = explode(',', $auction->getRawOriginal('images'));
+                foreach ($imagePaths as $imagePath) {
+                    Storage::delete('public/'. $imagePath);
+                }
+            }
             $auction->delete();
             return response()->json(['message' => 'Auction deleted']);
         } else {

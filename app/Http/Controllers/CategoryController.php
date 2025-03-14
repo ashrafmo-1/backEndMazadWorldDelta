@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use Illuminate\Support\Facades\Storage;
+
 
 class CategoryController extends Controller
 {
@@ -35,7 +37,12 @@ class CategoryController extends Controller
             'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        $category = Category::create($validatedData);
+
+
+        $category = Category::create([
+            'name' => $validatedData['name'],
+            'photo' => $validatedData['photo']->store('categories', 'public'),
+        ]);
         return response()->json($category, 201);
     }
 
@@ -43,7 +50,15 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         if ($category) {
-            $category->update($request->all());
+ 
+            if($request->has('photo') && $request->file('photo')) {
+                if($category->photo && $category->photo != "") {
+                    Storage::disk('public')->delete($category->getRawOriginal('photo'));
+                }
+                $category->photo = $request->photo->store('categories', 'public');
+            }
+            $category->name = $request->name;
+            $category->save();
             return response()->json($category);
         } else {
             return response()->json(['error' => 'Category not found'], 404);
@@ -54,6 +69,7 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
         if ($category) {
+            Storage::disk('public')->delete($category->getRawOriginal('photo'));
             $category->delete();
             return response()->json(['message' => 'Category deleted']);
         } else {
