@@ -97,6 +97,7 @@ Route::prefix('v1/auctions')->controller(AuctionController::class)->group(functi
     Route::get('show', 'index');
     Route::get('showSingleAuction/{id}', 'showSingleAuction');
     Route::post('create', 'create');
+    Route::post('Bidding/{auctionId}/place-bid', 'placeBid');
     Route::post('update/{id}', 'update');
     Route::delete('delete/{id}', 'kill');
 });

@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Models\Auction;
-
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -59,8 +60,6 @@ class AuctionController extends Controller
 
             $image->storeAs('public/auction_images', $imageName);
             $imagePaths.= 'auction_images/'.$imageName. ',';
-
-           
         }
 
         $imagePaths = rtrim($imagePaths, ',');
@@ -72,7 +71,8 @@ class AuctionController extends Controller
             'starting_price' => $validatedData['starting_price'],
             'current_price' => $validatedData['current_price'],
             'category_id' => $validatedData['category_id'],
-           'start_time' => $validatedData['start_time'],
+            'start_time' => $validatedData['start_time'],
+            'end_time' => $validatedData['end_time'],
         ]);
 
         return response()->json([
@@ -128,5 +128,52 @@ class AuctionController extends Controller
         } else {
             return response()->json(['error' => 'Auction not found'], 404);
         }
+    }
+
+    public function placeBid(Request $request, $id)
+    {
+        $auction = Auction::find($id);
+
+        if (!$auction) {
+            return response()->json(['error' => 'Auction not found'], 404);
+        }
+
+        if ($auction->end_time < now()) {
+            return response()->json(['error' => 'This auction has ended'], 403);
+        }
+
+        if ($auction->start_time > now()) {
+            return response()->json(['error' => 'This auction has not started yet'], 403);
+        }
+
+        $validator = \Illuminate\Support\Facades\Validator::make($request->all(), [
+            'bid_amount' => 'required|numeric|min:' . ($auction->current_price ?? $auction->starting_price),
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 422);
+        }
+
+        $bidAmount = $request->input('bid_amount');
+
+        if ($bidAmount <= ($auction->current_price ?? $auction->starting_price)) {
+            return response()->json(['error' => 'Your bid must be higher than the current price'], 400);
+        }
+
+        // Update the auction's current price
+        $auction->current_price = $bidAmount;
+        $auction->save();
+
+        // Optionally, log the bid or associate it with the user
+        $user = Auth::user();
+        $auction->bids()->create([
+            'user_id' => $user->id,
+            'amount' => $bidAmount,
+        ]);
+
+        return response()->json([
+            'message' => 'Bid placed successfully',
+            'auction' => $auction,
+        ], 200);
     }
 }
