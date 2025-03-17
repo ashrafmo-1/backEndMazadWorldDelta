@@ -31,9 +31,13 @@ class Auction extends Model
     protected function images(): Attribute
 {
     return Attribute::make(
-        get: fn ($value) => $value 
+        get: fn ($value) => $value
             ? collect(explode(',', $value))->map(fn ($image) => Storage::disk('public')->url($image))->toArray()
             : []
     );
 }
+
+// public function bids(){
+//     return $this->hasMany(Bid::class);
+// }
 }

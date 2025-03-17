@@ -142,6 +142,8 @@ class AuctionController extends Controller
             return response()->json(['error' => 'This auction has ended'], 403);
         }
 
+        // dd($auction->start_time, now());
+
         if ($auction->start_time > now()) {
             return response()->json(['error' => 'This auction has not started yet'], 403);
         }
@@ -165,11 +167,11 @@ class AuctionController extends Controller
         $auction->save();
 
         // Optionally, log the bid or associate it with the user
-        $user = Auth::user();
-        $auction->bids()->create([
-            'user_id' => $user->id,
-            'amount' => $bidAmount,
-        ]);
+        // $user = Auth::user();
+        // $auction->bids()->create([
+        //     'user_id' => $user->id,
+        //     'amount' => $bidAmount,
+        // ]);
 
         return response()->json([
             'message' => 'Bid placed successfully',
