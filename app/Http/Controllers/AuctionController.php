@@ -58,8 +58,8 @@ class AuctionController extends Controller
         foreach ($request->images as $index => $image) {
             $imageName = time(). '.'. $image->getClientOriginalExtension();
 
-            $image->storeAs('public/auction_images', $imageName);
-            $imagePaths.= 'auction_images/'.$imageName. ',';
+            $image->storeAs('public/auctions', $imageName);
+            $imagePaths.= 'auctions/'.$imageName. ',';
         }
 
         $imagePaths = rtrim($imagePaths, ',');
@@ -98,8 +98,8 @@ class AuctionController extends Controller
                 foreach ($request->images as $index => $image) {
                     $imageName = time(). '.'. $image->getClientOriginalExtension();
 
-                    $image->storeAs('public/auction_images', $imageName);
-                    $imagePaths.= 'auction_images/'.$imageName. ',';
+                    $image->storeAs('public/auctions', $imageName);
+                    $imagePaths.= 'auctions/'.$imageName. ',';
                 }
 
                 $imagePaths = rtrim($imagePaths, ',');
