@@ -12,11 +12,11 @@ class AuctionController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api')->except(['index', 'showSingleAuction']);
+        $this->middleware('auth:api')->except(['index', 'showSingleAuction', "placeBid"]);
+        // $this->middleware('auth:site')->only('placeBid');
     }
 
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
 
         $auctions = Auction::when($request->has('categoryId'), function ($query) use ($request) {
                 return $query->where('category_id', $request->categoryId);
@@ -41,6 +41,7 @@ class AuctionController extends Controller
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'paymentLink' => 'required|string',
             'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
             'images' => 'required|array|min:1',
             'starting_price' => 'required|numeric',
@@ -67,6 +68,7 @@ class AuctionController extends Controller
         $auction = Auction::create([
             'title' => $validatedData['title'],
             'description' => $validatedData['description'],
+            'paymentLink' => $validatedData['paymentLink'],
             'images' => $imagePaths,
             'starting_price' => $validatedData['starting_price'],
             'current_price' => $validatedData['current_price'],
@@ -87,6 +89,7 @@ class AuctionController extends Controller
         if ($auction) {
             $auction->title = $request->title;
             $auction->description = $request->description;
+            $auction->paymentLink = $request->paymentLink;
             $auction->starting_price = $request->starting_price;
             $auction->current_price = $request->current_price;
             $auction->category_id = $request->category_id;

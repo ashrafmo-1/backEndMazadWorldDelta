@@ -13,7 +13,7 @@ class Auction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'description', 'images', 'starting_price', 'current_price', 'category_id', 'start_time', 'end_time'
+        'title', 'description', 'images', 'starting_price', 'current_price', 'category_id', 'start_time', 'end_time', 'paymentLink'
     ];
 
     public function getImagePathsAttribute()
