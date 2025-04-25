@@ -94,6 +94,7 @@ class AuctionController extends Controller
             $auction->current_price = $request->current_price;
             $auction->category_id = $request->category_id;
             $auction->start_time = $request->start_time;
+            $auction->end_time = $request->end_time;
             $auction->save();
 
             if($request->file('images')){
