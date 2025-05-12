@@ -15,7 +15,8 @@ use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductsController;
-
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\BidController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -109,10 +110,23 @@ Route::prefix('v1/auctions-details')->controller(AuctionDetailsController::class
 Route::prefix('v1/products')->controller(ProductController::class)->group(function () {
     Route::get('', 'index');
     Route::get('{id}', 'show');
-
     Route::post('create', 'store');
     Route::post('update/{id}', 'update');
     Route::delete('delete/{id}', 'destroy');
+});
+
+Route::prefix('v1/contact')->controller(ContactController::class)->group(function () {
+    Route::post('', 'store'); // إرسال رسالة
+    Route::get('', 'index'); // عرض الرسائل
+    Route::post('/{id}/mark-as-read', 'markAsRead'); // تمييز كمقروءة
+    Route::delete('/{id}', 'destroy'); // حذف رسالة
+});
+
+Route::prefix('v1/bids')->controller(BidController::class)->group(function () {
+    Route::post('', 'store'); // إضافة مزايدة جديدة
+    Route::get('', 'index'); // عرض جميع المزايدات
+    Route::post('/{id}/mark-as-read', 'markAsRead'); // تمييز كمقروءة
+    Route::delete('/{id}', 'destroy'); // حذف مزايدة
 });
 
 Route::group(['middleware' => ['auth:api']], function () {
